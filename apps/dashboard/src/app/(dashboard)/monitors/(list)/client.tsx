@@ -174,12 +174,8 @@ export function Client() {
                   </MetricCardTitle>
                   <Icon className="size-4" />
                 </MetricCardHeader>
-<<<<<<< HEAD
-                {metric.key === "p95" && (isLoadingHttp || isLoadingTcp || isLoadingDns) ? (
-=======
                 {metric.key === "p95" &&
                 (isLoadingHttp || isLoadingTcp || isLoadingDns) ? (
->>>>>>> origin/fix/self-hosted-badge-custom-domains
                   <MetricCardSkeleton className="h-6 w-12" />
                 ) : (
                   <MetricCardValue>{metric.value}</MetricCardValue>
