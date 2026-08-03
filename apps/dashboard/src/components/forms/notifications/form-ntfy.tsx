@@ -120,7 +120,7 @@ export function FormNtfy({
           loading: "Sending test...",
           success: "Test sent",
           error: (error) => {
-            if (error instanceof Error) {
+            if (isTRPCClientError(error)) {
               return error.message;
             }
             return "Failed to send test";
