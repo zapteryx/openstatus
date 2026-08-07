@@ -90,7 +90,12 @@ export function NavActions() {
   });
 
   async function testAction() {
-    if (monitor?.jobType === "http") {
+    if (!monitor) return;
+
+    // Get the first public region to test against
+    const testRegion = monitor.regions?.[0];
+
+    if (monitor.jobType === "http") {
       const assertions = deserialize(monitor.assertions ?? "[]");
       const promise = testHttpMutation.mutateAsync({
         url: monitor.url,
@@ -98,6 +103,7 @@ export function NavActions() {
         method: monitor.method,
         headers: monitor.headers,
         assertions: assertions.map((a) => a.schema),
+        region: testRegion,
       });
 
       toast.promise(promise, {
@@ -113,8 +119,11 @@ export function NavActions() {
           return "HTTP test failed";
         },
       });
-    } else if (monitor?.jobType === "tcp") {
-      const promise = testTcpMutation.mutateAsync({ url: monitor.url });
+    } else if (monitor.jobType === "tcp") {
+      const promise = testTcpMutation.mutateAsync({
+        url: monitor.url,
+        region: testRegion,
+      });
 
       toast.promise(promise, {
         loading: "Testing TCP connection...",
@@ -129,11 +138,12 @@ export function NavActions() {
           return "TCP test failed";
         },
       });
-    } else if (monitor?.jobType === "dns") {
+    } else if (monitor.jobType === "dns") {
       const assertions = deserialize(monitor.assertions ?? "[]");
       const promise = testDnsMutation.mutateAsync({
         url: monitor.url,
         assertions: assertions.map((a) => a.schema),
+        region: testRegion,
       });
 
       toast.promise(promise, {
@@ -199,11 +209,16 @@ export function NavActions() {
               className="group h-7 w-7"
               type="button"
               onClick={testAction}
+              disabled={!monitor.regions || monitor.regions.length === 0}
             >
               <Speed className="text-muted-foreground group-hover:text-foreground" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Test Monitor</TooltipContent>
+          <TooltipContent>
+            {!monitor.regions || monitor.regions.length === 0
+              ? "Testing requires at least one public region"
+              : "Test Monitor"}
+          </TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <QuickActions
