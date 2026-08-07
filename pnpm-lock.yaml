@@ -2307,6 +2307,37 @@ importers:
         specifier: 'catalog:'
         version: 5.9.3
 
+  packages/notifications/gotify:
+    dependencies:
+      '@openstatus/db':
+        specifier: workspace:*
+        version: link:../../db
+      '@openstatus/notification-base':
+        specifier: workspace:*
+        version: link:../base
+      '@openstatus/utils':
+        specifier: workspace:*
+        version: link:../../utils
+      zod:
+        specifier: 'catalog:'
+        version: 4.1.13
+    devDependencies:
+      '@openstatus/tsconfig':
+        specifier: workspace:*
+        version: link:../../tsconfig
+      '@std/expect':
+        specifier: jsr:^1.0.19
+        version: '@jsr/std__expect@1.0.19'
+      '@std/testing':
+        specifier: jsr:^1.0.19
+        version: '@jsr/std__testing@1.0.19'
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.12.4
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+
   packages/notifications/grafana-oncall:
     dependencies:
       '@openstatus/db':
@@ -8092,6 +8123,7 @@ packages:
 
   crypto-js@4.2.0:
     resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
+    deprecated: Active development of CryptoJS has been discontinued. This library is no longer maintained.
 
   css-select@5.2.2:
     resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
