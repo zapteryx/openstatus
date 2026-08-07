@@ -74,16 +74,25 @@ COPY \
     "/app/packages" "/app/packages"
 RUN <<EOF
 set -e
+echo "Bundling with esbuild..."
+cd /app/apps/workflows
+npx esbuild src/serve.ts \
+  --bundle \
+  --platform=node \
+  --target=esnext \
+  --format=esm \
+  --outfile=/tmp/bundle.mjs \
+  --external:@libsql/client \
+  --external:libsql \
+  --external:@google-cloud/tasks
+echo "Creating package.json for native deps..."
 mkdir -p /tmp/sc
-echo "Creating package.json..."
 deno eval 'const p="/app/node_modules/.pnpm";const v=(x)=>{for(const e of Deno.readDirSync(p))if(e.name.startsWith(x+"@"))return e.name.slice(x.length+1).split("_")[0]};Deno.writeTextFileSync("/tmp/sc/package.json",JSON.stringify({dependencies:{"@libsql/client":v("@libsql+client"),libsql:v("libsql"),"@google-cloud/tasks":v("@google-cloud+tasks")}}))'
-echo "Installing dependencies in /tmp/sc..."
+echo "Installing native dependencies..."
 cd /tmp/sc && deno install --node-modules-dir=auto --allow-scripts
-echo "Checking if source file exists..."
-ls -la /app/apps/workflows/src/serve.ts
-echo "Compiling with deno..."
-cd /app/apps/workflows && deno compile --no-check -A --sloppy-imports --output /app/apps/workflows/app src/serve.ts
-echo "Checking if app binary was created..."
+echo "Compiling bundle with deno..."
+cd /tmp/sc && deno compile --no-check -A --node-modules-dir=auto --output /app/apps/workflows/app /tmp/bundle.mjs
+echo "Verifying binary was created..."
 ls -la /app/apps/workflows/app
 mkdir -p /app/data
 EOF
