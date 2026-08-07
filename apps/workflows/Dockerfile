@@ -79,10 +79,8 @@ esbuild src/serve.ts \
   --platform=node \
   --target=esnext \
   --format=esm \
-  --outfile=/tmp/bundle.mjs \
-  --external:@libsql/client \
-  --external:libsql \
-  --external:@google-cloud/tasks
+  --packages=external \
+  --outfile=/tmp/bundle.mjs
 echo "Bundle created at /tmp/bundle.mjs"
 ls -la /tmp/bundle.mjs
 EOF
