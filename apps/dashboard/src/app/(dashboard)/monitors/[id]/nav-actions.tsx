@@ -92,8 +92,16 @@ export function NavActions() {
   async function testAction() {
     if (!monitor) return;
 
+    // Check if monitor has public regions
+    if (!monitor.regions || monitor.regions.length === 0) {
+      toast.error(
+        "Testing requires at least one public region. Private locations run on scheduled intervals only.",
+      );
+      return;
+    }
+
     // Get the first public region to test against
-    const testRegion = monitor.regions?.[0];
+    const testRegion = monitor.regions[0];
 
     if (monitor.jobType === "http") {
       const assertions = deserialize(monitor.assertions ?? "[]");
@@ -209,16 +217,11 @@ export function NavActions() {
               className="group h-7 w-7"
               type="button"
               onClick={testAction}
-              disabled={!monitor.regions || monitor.regions.length === 0}
             >
               <Speed className="text-muted-foreground group-hover:text-foreground" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
-            {!monitor.regions || monitor.regions.length === 0
-              ? "Testing requires at least one public region"
-              : "Test Monitor"}
-          </TooltipContent>
+          <TooltipContent>Test Monitor</TooltipContent>
         </Tooltip>
       </TooltipProvider>
       <QuickActions
