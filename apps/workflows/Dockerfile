@@ -82,7 +82,7 @@ cd /tmp/sc && deno install --node-modules-dir=auto --allow-scripts
 echo "Checking if source file exists..."
 ls -la /app/apps/workflows/src/serve.ts
 echo "Compiling with deno..."
-cd /tmp/sc && deno compile --no-check -A --node-modules-dir=manual --output /app/apps/workflows/app /app/apps/workflows/src/serve.ts
+cd /tmp/sc && deno compile --no-check -A --sloppy-imports --node-modules-dir=manual --output /app/apps/workflows/app /app/apps/workflows/src/serve.ts
 echo "Checking if app binary was created..."
 ls -la /app/apps/workflows/app
 mkdir -p /app/data
