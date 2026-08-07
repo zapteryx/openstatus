@@ -70,9 +70,11 @@ COPY \
     "/app/packages" "/app/packages"
 RUN <<EOF
 set -e
+echo "Installing esbuild..."
+npm install esbuild
 echo "Bundling with esbuild..."
 cd /app/apps/workflows
-npx -y esbuild src/serve.ts \
+npx esbuild src/serve.ts \
   --bundle \
   --platform=node \
   --target=esnext \
