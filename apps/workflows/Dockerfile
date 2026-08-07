@@ -103,13 +103,8 @@ COPY \
     "/app/node_modules" "/app/node_modules"
 RUN <<EOF
 set -e
-echo "Creating package.json for native deps..."
-mkdir -p /tmp/sc
-deno eval 'const p="/app/node_modules/.pnpm";const v=(x)=>{for(const e of Deno.readDirSync(p))if(e.name.startsWith(x+"@"))return e.name.slice(x.length+1).split("_")[0]};Deno.writeTextFileSync("/tmp/sc/package.json",JSON.stringify({dependencies:{"@libsql/client":v("@libsql+client"),libsql:v("libsql"),"@google-cloud/tasks":v("@google-cloud+tasks")}}))'
-echo "Installing native dependencies..."
-cd /tmp/sc && deno install --node-modules-dir=auto --allow-scripts
 echo "Compiling bundle with deno..."
-cd /tmp/sc && deno compile --no-check -A --node-modules-dir=auto --output /app/apps/workflows/app /tmp/bundle.mjs
+cd /app && deno compile --no-check -A --node-modules-dir=auto --output /app/apps/workflows/app /tmp/bundle.mjs
 echo "Verifying binary was created..."
 ls -la /app/apps/workflows/app
 mkdir -p /app/data
