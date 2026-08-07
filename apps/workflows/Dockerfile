@@ -73,10 +73,18 @@ COPY \
     --link \
     "/app/packages" "/app/packages"
 RUN <<EOF
+set -e
 mkdir -p /tmp/sc
+echo "Creating package.json..."
 deno eval 'const p="/app/node_modules/.pnpm";const v=(x)=>{for(const e of Deno.readDirSync(p))if(e.name.startsWith(x+"@"))return e.name.slice(x.length+1).split("_")[0]};Deno.writeTextFileSync("/tmp/sc/package.json",JSON.stringify({dependencies:{"@libsql/client":v("@libsql+client"),libsql:v("libsql"),"@google-cloud/tasks":v("@google-cloud+tasks")}}))'
+echo "Installing dependencies in /tmp/sc..."
 cd /tmp/sc && deno install --node-modules-dir=auto --allow-scripts
+echo "Checking if source file exists..."
+ls -la /app/apps/workflows/src/serve.ts
+echo "Compiling with deno..."
 cd /tmp/sc && deno compile --no-check -A --node-modules-dir=manual --external '@libsql/client' --external 'libsql' --external '@google-cloud/tasks' --output /app/apps/workflows/app /app/apps/workflows/src/serve.ts
+echo "Checking if app binary was created..."
+ls -la /app/apps/workflows/app
 mkdir -p /app/data
 EOF
 
