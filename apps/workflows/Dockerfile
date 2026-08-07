@@ -50,9 +50,9 @@ pnpm install --prod --frozen-lockfile --filter=@openstatus/workflows... --verbos
 EOF
 
 # bundle
-FROM node@sha256:f7f577660ea30c5e2ffea31d30e8d8ae5e3e3c4a0e2fcc11e2d2ab7e238d8c4e AS bundle
+FROM node@sha256:b31e7a42fdf8b8aa5f5ed477c72d694301273f1069c5a2f71d53c6482e99a2fc AS bundle
 LABEL \
-    org.opencontainers.image.base.digest="sha256:f7f577660ea30c5e2ffea31d30e8d8ae5e3e3c4a0e2fcc11e2d2ab7e238d8c4e" \
+    org.opencontainers.image.base.digest="sha256:b31e7a42fdf8b8aa5f5ed477c72d694301273f1069c5a2f71d53c6482e99a2fc" \
     org.opencontainers.image.base.name="docker.io/library/node:24-slim" \
     org.opencontainers.image.stage="bundle"
 ENV NODE_ENV="production"
