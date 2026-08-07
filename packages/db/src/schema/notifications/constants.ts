@@ -2,6 +2,7 @@ export const notificationProvider = [
   "discord",
   "email",
   "google-chat",
+  "gotify",
   "grafana-oncall",
   "ms-teams",
   "ntfy",

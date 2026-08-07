@@ -1,6 +1,7 @@
 export * from "./discord";
 export * from "./github";
 export * from "./google";
+export * from "./gotify";
 export * from "./grafana";
 export * from "./pagerduty";
 export * from "./slack";

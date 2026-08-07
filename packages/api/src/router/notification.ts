@@ -2,6 +2,7 @@ import { Events } from "@openstatus/analytics";
 import {
   discordDataSchema,
   googleChatDataSchema,
+  gotifyDataSchema,
   grafanaOncallDataSchema,
   msTeamsDataSchema,
   notificationProvider,
@@ -17,6 +18,7 @@ import { SchemaError } from "@openstatus/error";
 import { sendTest as sendWhatsAppTest } from "@openstatus/notification-bird-whatsapp";
 import { sendTestDiscordMessage as sendDiscordTest } from "@openstatus/notification-discord";
 import { sendTest as sendGoogleChatTest } from "@openstatus/notification-google-chat";
+import { sendTest as sendGotifyTest } from "@openstatus/notification-gotify";
 import { sendTest as sendGrafanaTest } from "@openstatus/notification-grafana-oncall";
 import { sendTest as sendMsTeamsTest } from "@openstatus/notification-ms-teams";
 import { sendTest as sendNtfyTest } from "@openstatus/notification-ntfy";
@@ -181,6 +183,18 @@ export const notificationRouter = createTRPCRouter({
         }
 
         await sendGoogleChatTest(_data.data["google-chat"]);
+        return;
+      }
+      if (opts.input.provider === "gotify") {
+        const _data = gotifyDataSchema.safeParse(opts.input.data);
+        if (!_data.success) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: SchemaError.fromZod(_data.error, opts.input).message,
+          });
+        }
+
+        await sendGotifyTest(_data.data.gotify);
         return;
       }
       if (opts.input.provider === "grafana-oncall") {
