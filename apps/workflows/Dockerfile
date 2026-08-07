@@ -72,7 +72,7 @@ RUN <<EOF
 set -e
 echo "Bundling with esbuild..."
 cd /app/apps/workflows
-npx esbuild src/serve.ts \
+npx -y esbuild src/serve.ts \
   --bundle \
   --platform=node \
   --target=esnext \
