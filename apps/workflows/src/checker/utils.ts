@@ -21,6 +21,11 @@ import {
   sendRecovery as sendGoogleChatRecovery,
 } from "@openstatus/notification-google-chat";
 import {
+  sendAlert as sendGotifyAlert,
+  sendDegraded as sendGotifyDegraded,
+  sendRecovery as sendGotifyRecovery,
+} from "@openstatus/notification-gotify";
+import {
   sendAlert as sendGrafanaOncallAlert,
   sendDegraded as sendGrafanaOncallDegraded,
   sendRecovery as sendGrafanaOncallRecovery,
@@ -89,6 +94,11 @@ export const providerToFunction: Record<NotificationProvider, Notif> = {
     sendAlert: sendGoogleChatAlert,
     sendRecovery: sendGoogleChatRecovery,
     sendDegraded: sendGoogleChatDegraded,
+  },
+  gotify: {
+    sendAlert: sendGotifyAlert,
+    sendRecovery: sendGotifyRecovery,
+    sendDegraded: sendGotifyDegraded,
   },
   "grafana-oncall": {
     sendAlert: sendGrafanaOncallAlert,

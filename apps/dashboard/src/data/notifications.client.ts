@@ -9,6 +9,7 @@ import {
 import {
   DiscordIcon,
   GoogleIcon,
+  GotifyIcon,
   GrafanaIcon,
   MicrosoftTeamsIcon,
   TelegramIcon,
@@ -21,6 +22,7 @@ import { SlackIcon } from "@openstatus/icons/brand";
 import { FormDiscord } from "@/components/forms/notifications/form-discord";
 import { FormEmail } from "@/components/forms/notifications/form-email";
 import { FormGoogleChat } from "@/components/forms/notifications/form-google-chat";
+import { FormGotify } from "@/components/forms/notifications/form-gotify";
 import { FormGrafanaOncall } from "@/components/forms/notifications/form-grafana-oncall";
 import { FormMsTeams } from "@/components/forms/notifications/form-ms-teams";
 import { FormNtfy } from "@/components/forms/notifications/form-ntfy";
@@ -100,6 +102,11 @@ export const config = {
     icon: GoogleIcon,
     label: "Google Chat",
     form: FormGoogleChat,
+  },
+  gotify: {
+    icon: GotifyIcon,
+    label: "Gotify",
+    form: FormGotify,
   },
   "grafana-oncall": {
     icon: GrafanaIcon,
