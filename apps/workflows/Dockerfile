@@ -49,14 +49,14 @@ corepack enable pnpm
 pnpm install --prod --frozen-lockfile --filter=@openstatus/workflows... --verbose
 EOF
 
-# build
-FROM denoland/deno@sha256:69a9f3033e3f381770452648b1cbf4ae96ea409f7ef24f30afeff3d380705f62 AS build
+# bundle
+FROM node@sha256:f7f577660ea30c5e2ffea31d30e8d8ae5e3e3c4a0e2fcc11e2d2ab7e238d8c4e AS bundle
 LABEL \
-    org.opencontainers.image.base.digest="sha256:69a9f3033e3f381770452648b1cbf4ae96ea409f7ef24f30afeff3d380705f62" \
-    org.opencontainers.image.base.name="docker.io/denoland/deno:2.9.2" \
-    org.opencontainers.image.stage="build"
+    org.opencontainers.image.base.digest="sha256:f7f577660ea30c5e2ffea31d30e8d8ae5e3e3c4a0e2fcc11e2d2ab7e238d8c4e" \
+    org.opencontainers.image.base.name="docker.io/library/node:24-slim" \
+    org.opencontainers.image.stage="bundle"
 ENV NODE_ENV="production"
-WORKDIR /app/apps/workflows
+WORKDIR /app
 COPY \
     --link \
     "." "/app/"
@@ -64,10 +64,6 @@ COPY \
     --from=install \
     --link \
     "/app/node_modules" "/app/node_modules"
-COPY \
-    --from=install \
-    --link \
-    "/app/apps/workflows/node_modules" "/app/apps/workflows/node_modules"
 COPY \
     --from=install \
     --link \
@@ -85,6 +81,28 @@ npx esbuild src/serve.ts \
   --external:@libsql/client \
   --external:libsql \
   --external:@google-cloud/tasks
+echo "Bundle created at /tmp/bundle.mjs"
+ls -la /tmp/bundle.mjs
+EOF
+
+# build
+FROM denoland/deno@sha256:69a9f3033e3f381770452648b1cbf4ae96ea409f7ef24f30afeff3d380705f62 AS build
+LABEL \
+    org.opencontainers.image.base.digest="sha256:69a9f3033e3f381770452648b1cbf4ae96ea409f7ef24f30afeff3d380705f62" \
+    org.opencontainers.image.base.name="docker.io/denoland/deno:2.9.2" \
+    org.opencontainers.image.stage="build"
+ENV NODE_ENV="production"
+WORKDIR /app/apps/workflows
+COPY \
+    --from=bundle \
+    --link \
+    "/tmp/bundle.mjs" "/tmp/bundle.mjs"
+COPY \
+    --from=install \
+    --link \
+    "/app/node_modules" "/app/node_modules"
+RUN <<EOF
+set -e
 echo "Creating package.json for native deps..."
 mkdir -p /tmp/sc
 deno eval 'const p="/app/node_modules/.pnpm";const v=(x)=>{for(const e of Deno.readDirSync(p))if(e.name.startsWith(x+"@"))return e.name.slice(x.length+1).split("_")[0]};Deno.writeTextFileSync("/tmp/sc/package.json",JSON.stringify({dependencies:{"@libsql/client":v("@libsql+client"),libsql:v("libsql"),"@google-cloud/tasks":v("@google-cloud+tasks")}}))'
