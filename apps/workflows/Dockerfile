@@ -76,8 +76,7 @@ RUN <<EOF
 mkdir -p /tmp/sc
 deno eval 'const p="/app/node_modules/.pnpm";const v=(x)=>{for(const e of Deno.readDirSync(p))if(e.name.startsWith(x+"@"))return e.name.slice(x.length+1).split("_")[0]};Deno.writeTextFileSync("/tmp/sc/package.json",JSON.stringify({dependencies:{"@libsql/client":v("@libsql+client"),libsql:v("libsql"),"@google-cloud/tasks":v("@google-cloud+tasks")}}))'
 cd /tmp/sc && deno install --node-modules-dir=auto --allow-scripts
-cd /app/apps/workflows && deno bundle --platform=deno --minify --sloppy-imports --node-modules-dir=manual --external '@libsql/client' --external 'libsql' --external '@google-cloud/tasks' --output /tmp/sc/_serve.bundle.mjs src/serve.ts
-cd /tmp/sc && deno compile --no-check -A --node-modules-dir=manual --output /app/apps/workflows/app /tmp/sc/_serve.bundle.mjs
+cd /app/apps/workflows && deno compile --no-check -A --node-modules-dir=manual --output /app/apps/workflows/app src/serve.ts
 mkdir -p /app/data
 EOF
 
